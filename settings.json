@@ -1,0 +1,20 @@
+{
+    "window": {
+        "width": 800,
+        "height": 800,
+        "title": "RayCaster!",
+        "vsync": true
+    },
+    "viewport": {
+        "width": 800,
+        "height": 800
+    },
+    "debug": {
+        "printFPS": true,
+        "drawCollisionShapes": false
+    },
+    "engine": {
+        "physicsUpdateCallFreq": 60,
+        "fontPath": "resources/Born2bSportyV2.ttf"
+    }
+}
