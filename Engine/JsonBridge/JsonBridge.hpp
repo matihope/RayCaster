@@ -3,11 +3,11 @@
 #include <nlohmann/json.hpp>
 
 class JsonBridge {
-  std::string m_file_path;
+	std::string m_file_path;
  public:
-  nlohmann::json data;
+	nlohmann::json data;
 
-  bool load(const std::string &filePath);
-  bool saveCurrentState();
-  std::string getFilePath() const;
+	bool load(const std::string &filePath);
+	bool saveCurrentState();
+	std::string getFilePath() const;
 };

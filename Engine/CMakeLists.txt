@@ -13,7 +13,12 @@ set(ENGINE_SOURCES
         ResourceManager/ResourceManager.cpp
         WorldEntity/WorldEntity.cpp
         Clickable/Clickable.cpp
-        SpriteBatch/SpriteBatch.cpp SpriteBatch/SpriteBatch.hpp SpriteBatch/QuickSprite.cpp SpriteBatch/QuickSprite.hpp)
+        SpriteBatch/SpriteBatch.cpp SpriteBatch/SpriteBatch.hpp SpriteBatch/QuickSprite.cpp SpriteBatch/QuickSprite.hpp
+        Nodes/RectShape.cpp
+        Nodes/RectShape.hpp
+        Nodes/CircleShape.cpp
+        Nodes/CircleShape.hpp
+)
 
 add_library(Engine ${ENGINE_SOURCES})
 target_include_directories(Engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
