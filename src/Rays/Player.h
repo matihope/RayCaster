@@ -10,6 +10,7 @@ class Player {
  public:
 	Player();
 	[[nodiscard]] Math::Vector2f getPosition() const;
+	void setPosition(Math::Vector2f position);
 	[[nodiscard]] float getDirectionRadians() const;
 	void move(Math::Vector2f delta);
 	void rotate(float radiansDiff);

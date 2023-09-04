@@ -12,6 +12,7 @@ class SpriteBatch : public WorldEntity {
 	explicit SpriteBatch(const sf::Texture *texture);
 	explicit SpriteBatch(std::size_t size, const sf::Texture *texture);
 	void setSize(std::size_t size);
+	[[nodiscard]] std::size_t getSize() const;
 	void setTexture(const sf::Texture *newTexture);
 	const sf::Texture *getTexture();
 	QuickSprite getSprite(unsigned int id);
@@ -22,5 +23,6 @@ class SpriteBatch : public WorldEntity {
 	void makeGrid(sf::Vector2u grid_size, sf::Vector2f tile_size);
  private:
 	sf::VertexArray m_vertex_array;
+	std::size_t spriteCount{};
 	const sf::Texture *m_texture;
 };

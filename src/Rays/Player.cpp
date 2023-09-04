@@ -26,3 +26,6 @@ void Player::rotate(float radiansDiff) {
 	direction += radiansDiff;
 	direction = Math::makeInRange(direction, 2 * M_PI);
 }
+void Player::setPosition(Math::Vector2f position) {
+	this->position = position;
+}

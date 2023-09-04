@@ -18,13 +18,20 @@ class Level2D : public WorldEntity {
 	void addRayGame(rc::RayGame *game);
 	void onPhysicsUpdate(float dt) override;
 
+	void setViewArea(std::vector<Math::Vector2f> vector_1);
+
+	void onDraw(sf::RenderTarget &target, sf::RenderStates states) const override;
+	void setPlayerRadius(float radius);
  private:
 
 	rc::RayGame *rc_game;
 	SpriteBatch *sprites_preview;
 	RectShape *background;
-	CircleShape *player, *collisionPoint;
-	RayShape *playerRay, *mouseRay;
+	CircleShape *player;
+	RayShape *playerRay;
+
+	sf::VertexArray viewArea;
+	const sf::Texture *viewTexture;
 
 	void _updateSpritePreview();
 	void _updatePlayerPosition(float dt);

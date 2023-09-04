@@ -8,13 +8,16 @@
 #include "WorldEntity/WorldEntity.hpp"
 #include "Rays/RayGame.h"
 #include "Scenes/Level2D/Level2D.h"
+#include "Scenes/Level3D/Level3D.hpp"
 
 class World : public WorldEntity {
  public:
 	World();
+	void onUpdate(float dt) override;
  private:
 	rc::RayGame rc_game;
 	Level2D *level_preview;
+	Level3D *level3D;
 };
 
 #endif //RAYCASTER_WORLD_H

@@ -28,7 +28,8 @@ class Level {
 	bool readLevelFromFile(const std::string &path);
 	[[nodiscard]] const std::vector<std::vector<int>> &getLevelData() const;
 	Math::Vector2u getSize();
-	Math::Vector2<float> castRayFrom(Math::Vector2f position, float angleRadians) const;
+	[[nodiscard]] Math::Vector2<float> castRayFrom(Math::Vector2f position, float angleRadians) const;
+	[[nodiscard]] Math::Vector2f getTileSize() const;
 };
 
 } // rc

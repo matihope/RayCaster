@@ -19,6 +19,7 @@ SpriteBatch::SpriteBatch(std::size_t size, const sf::Texture *texture) : SpriteB
 
 void SpriteBatch::setSize(std::size_t size) {
 	m_vertex_array.resize(size * 4);
+	spriteCount = size;
 	for (size_t i = 0; i < size; i++) {
 		getSprite(i).clear();
 	}
@@ -54,4 +55,7 @@ void SpriteBatch::makeGrid(sf::Vector2u grid_size, sf::Vector2f tile_size) {
 			sprite.setSize(tile_size);
 		}
 	}
+}
+std::size_t SpriteBatch::getSize() const {
+	return spriteCount;
 }

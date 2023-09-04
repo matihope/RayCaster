@@ -5,7 +5,10 @@
 #define FLOAT_INFINITY 1000000000.f
 #define INT_INFINITY 1000000000I
 #define LL_INFINITY 1000000000000000000LL
+#define EPS_ZERO 1e-12
+
 namespace Math {
+
 template<typename T>
 int sign(T val) {
 	return (0 < val) - (val < 0);
@@ -51,12 +54,12 @@ class Vector2 {
 
 	template<class X>
 	Vector2<T> operator*(const X &rhs) {
-		return {x * rhs.x, y * rhs.y};
+		return {x * rhs, y * rhs};
 	}
 
 	template<class X>
 	Vector2<T> operator/(const X &rhs) {
-		return {x / rhs.x, y / rhs.y};
+		return {x / rhs, y / rhs};
 	}
 
 	T length() const {
@@ -85,5 +88,10 @@ float makeInRange(float value, float range);
 
 bool doLinesIntersect(Vector2f lineAStart, Vector2f lineAEnd, Vector2f LineBStart, Vector2f LineBEnd);
 Vector2f findLineIntersection(Vector2f lineAStart, Vector2f lineAEnd, Vector2f LineBStart, Vector2f LineBEnd);
+
+template<typename T>
+bool isZero(T value) {
+	return abs(value) <= EPS_ZERO;
+}
 
 }

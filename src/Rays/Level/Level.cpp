@@ -28,6 +28,7 @@ void Level::setSize(Math::Vector2u newSize) {
 }
 
 void Level::setTileSize(float width, float height) {
+	levelWalls.clear();
 	tileSize = Math::Vector2f(width, height);
 	for (int y = 0; y < levelData.size(); y++) {
 		for (int x = 0; x < levelData[0].size(); x++) {
@@ -81,8 +82,6 @@ auto intersectionComparator = [](const std::pair<Math::Vector2f, float> &a, cons
 };
 
 Math::Vector2<float> Level::castRayFrom(Math::Vector2f position, float angleRadians) const {
-	std::cout << position.x << " " << position.y << std::endl;
-	std::cout << "angle: " << angleRadians << std::endl;
 	auto maxLength = std::max(tileSize.x * levelData[0].size(), tileSize.y * levelData.size());
 	Math::Vector2f infiniteRay = {0, maxLength};
 	infiniteRay = Math::rotateVector(infiniteRay, angleRadians);
@@ -96,6 +95,9 @@ Math::Vector2<float> Level::castRayFrom(Math::Vector2f position, float angleRadi
 		}
 	}
 	return intersections.begin()->first;
+}
+Math::Vector2f Level::getTileSize() const {
+	return tileSize;
 }
 
 } // rc

@@ -11,9 +11,10 @@ Level2D::Level2D() {
 	background = addChild<RectShape>(sf::Color(50, 50, 50), sf::Vector2f(600, 600));
 	sprites_preview = addChild<SpriteBatch>();
 	playerRay = addChild<RayShape>(sf::Color(210, 210, 250), 3.5f, 45.f, 12.f);
-	mouseRay = addChild<RayShape>(sf::Color(210, 10, 250), 3.5f, 45.f, 12.f);
-	player = addChild<CircleShape>(sf::Color(70, 70, 170), 10.f);
-	collisionPoint = addChild<CircleShape>(sf::Color(50, 255, 50), 5.f);
+	player = addChild<CircleShape>(sf::Color(70, 70, 170), 1.f);
+
+	viewArea.setPrimitiveType(sf::TriangleFan);
+	viewTexture = &ResourceManager::get().getTexture("resources/walls.png");
 }
 void Level2D::onPhysicsUpdate(float dt) {
 	_updateSpritePreview();
@@ -32,17 +33,18 @@ void Level2D::addRayGame(rc::RayGame *game) {
 	for (int y = 0; y < level_height; y++) {
 		for (int x = 0; x < level_width; x++) {
 			QuickSprite sprite = sprites_preview->getSprite(y * level_width + x);
-			auto [tex_x, tex_y] = sprites_preview->getTexture()->getSize();
+			auto [texture_width, texture_height] = sprites_preview->getTexture()->getSize();
 			if (rc_game->getLevelData()[y][x] == 1) {
-				sprite.setTexPosition(sf::Vector2f(tex_x / 5.f, 0));
-				sprite.setTexSize({tex_x / 5.f, (float) tex_y});
+				sprite.setTexPosition(sf::Vector2f(texture_width / 5.f, 0));
+				sprite.setTexSize({texture_width / 5.f, (float) texture_height});
 			} else {
 				sprite.setTexSize({0, 0});
 			}
 		}
 	}
 
-	rc_game->setLevelTileSize(600 / 6.f);
+	rc_game->setLevelTileSize(Math::Vector2f(view_width / rc_game->getLevelSize().x,
+	                                         view_height / rc_game->getLevelSize().y));
 }
 
 void Level2D::_updateSpritePreview() {
@@ -63,7 +65,7 @@ void Level2D::_updateSpritePreview() {
 void Level2D::_updatePlayerPosition(float dt) {
 	float
 		deltaRotation = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-	rc_game->rotatePlayer(deltaRotation * dt * 3.0);
+	rc_game->rotatePlayer(deltaRotation * dt);
 	auto playerRotation = rc_game->getPlayerRotation();
 	playerRay->setRotation(Math::radiansToDegrees(playerRotation));
 
@@ -72,17 +74,26 @@ void Level2D::_updatePlayerPosition(float dt) {
 	auto delta = Math::Vector2f(delta_x, delta_y);
 	delta = Math::normalizeVector(delta);
 	delta = Math::rotateVector(delta, playerRotation);
-	delta *= 100 * dt;
+	delta *= 60 * dt;
 
 	rc_game->movePlayer(delta);
 
 	auto [player_x, player_y] = rc_game->getPlayerPosition();
 	playerRay->setPosition(player_x, player_y);
 	player->setPosition(player_x, player_y);
+}
 
-	mouseRay->setPosition(player_x, player_y);
-	mouseRay->pointAt(Game::get().getMousePos() - player->getGlobalPosition());
-
-	auto [collision_x, collision_y] = rc_game->castRayFromPlayer(Math::degreesToRadians(mouseRay->getRotation() - 180.f));
-	collisionPoint->setPosition(collision_x, collision_y);
+void Level2D::setViewArea(std::vector<Math::Vector2f> hits) {
+	viewArea.resize(hits.size() + 1);
+	for (int i = 0; i < hits.size(); i++)
+		viewArea[i].position = {hits[0].x, hits[1].y};
+	viewArea[hits.size()] = player->getPosition();
+}
+void Level2D::onDraw(sf::RenderTarget &target, sf::RenderStates states) const {
+	states.transform *= getTransform();
+	states.texture = viewTexture;
+	target.draw(viewArea, states);
+}
+void Level2D::setPlayerRadius(float radius) {
+	player->setRadius(radius);
 }
