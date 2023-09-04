@@ -70,3 +70,8 @@ void WorldEntity::show() {
 void WorldEntity::hide() {
 	m_show = false;
 }
+sf::Vector2f WorldEntity::getGlobalPosition() const {
+	if (m_parent == nullptr)
+		return getPosition();
+	return getPosition() + m_parent->getGlobalPosition();
+}

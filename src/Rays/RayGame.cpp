@@ -19,3 +19,18 @@ Math::Vector2f rc::RayGame::getPlayerPosition() const {
 void rc::RayGame::movePlayer(Math::Vector2f delta) {
 	player.move(delta);
 }
+void rc::RayGame::rotatePlayer(float deltaRadians) {
+	player.rotate(deltaRadians);
+}
+float rc::RayGame::getPlayerRotation() const {
+	return player.getDirectionRadians();
+}
+void rc::RayGame::setLevelTileSize(float size) {
+	level.setTileSize({size, size});
+}
+Math::Vector2f rc::RayGame::castRayFromPlayer(float directionRadians) const {
+	return castRayFrom(player.getPosition(), directionRadians);
+}
+Math::Vector2f rc::RayGame::castRayFrom(Math::Vector2f position, float directionRadians) const {
+	return level.castRayFrom(position, directionRadians);
+}

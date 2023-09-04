@@ -60,4 +60,6 @@ class WorldEntity : public sf::Drawable, public sf::Transformable, public Updata
 
 	void show();
 	void hide();
+
+	sf::Vector2f getGlobalPosition() const;
 };

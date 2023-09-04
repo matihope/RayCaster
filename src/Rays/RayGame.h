@@ -6,7 +6,7 @@
 #define RAYCASTER_SRC_RAYS_RAYGAME_H_
 
 #include <string>
-#include "Level.h"
+#include "Level/Level.h"
 #include "Player.h"
 
 namespace rc {
@@ -14,10 +14,15 @@ class RayGame {
  public:
 	bool loadLevelFromFile(const std::string &levelPath);
 	Math::Vector2u getLevelSize();
-	const std::vector<std::vector<int>> &getLevelData() const;
+	[[nodiscard]] const std::vector<std::vector<int>> &getLevelData() const;
 
 	void movePlayer(Math::Vector2f delta);
-	Math::Vector2f getPlayerPosition() const;
+	void rotatePlayer(float deltaRadians);
+	[[nodiscard]] Math::Vector2f getPlayerPosition() const;
+	[[nodiscard]] float getPlayerRotation() const;
+	void setLevelTileSize(float size);
+	[[nodiscard]] Math::Vector2f castRayFromPlayer(float directionRadians) const;
+	[[nodiscard]] Math::Vector2f castRayFrom(Math::Vector2f position, float directionRadians) const;
  private:
 	Level level;
 	Player player;

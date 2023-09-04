@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <cmath>
 
 #define FLOAT_INFINITY 1000000000.f
 #define INT_INFINITY 1000000000I
@@ -40,6 +41,28 @@ class Vector2 {
 		return *this;
 	}
 
+	Vector2<T> operator+(const Vector2<T> &rhs) {
+		return {x + rhs.x, y + rhs.y};
+	}
+
+	Vector2<T> operator-(const Vector2<T> &rhs) {
+		return {x - rhs.x, y - rhs.y};
+	}
+
+	template<class X>
+	Vector2<T> operator*(const X &rhs) {
+		return {x * rhs.x, y * rhs.y};
+	}
+
+	template<class X>
+	Vector2<T> operator/(const X &rhs) {
+		return {x / rhs.x, y / rhs.y};
+	}
+
+	T length() const {
+		return std::sqrt(x * x + y * y);
+	}
+
 };
 
 typedef Vector2<float> Vector2f;
@@ -47,7 +70,20 @@ typedef Vector2<int> Vector2i;
 typedef Vector2<unsigned int> Vector2u;
 
 Vector2f normalizeVector(Vector2f vector);
+
+Vector2f rotateVector(Vector2f vector, float angleRads);
+
 bool isPointInsideConvex(const std::vector<Vector2f> &convex, const Vector2f &point);
 bool doShapesIntersect(const std::vector<Vector2f> &shape1, const std::vector<Vector2f> &shape2);
+
+float radiansToDegrees(float radians);
+float degreesToRadians(float degrees);
+
+// makes while(value > range) value -= range
+// in an optimal way.
+float makeInRange(float value, float range);
+
+bool doLinesIntersect(Vector2f lineAStart, Vector2f lineAEnd, Vector2f LineBStart, Vector2f LineBEnd);
+Vector2f findLineIntersection(Vector2f lineAStart, Vector2f lineAEnd, Vector2f LineBStart, Vector2f LineBEnd);
 
 }

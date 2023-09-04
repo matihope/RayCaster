@@ -10,9 +10,13 @@ class Player {
  public:
 	Player();
 	[[nodiscard]] Math::Vector2f getPosition() const;
+	[[nodiscard]] float getDirectionRadians() const;
 	void move(Math::Vector2f delta);
+	void rotate(float radiansDiff);
  private:
 	Math::Vector2f position;
+	float direction{};
+	float getDirectionDegrees() const;
 };
 
 #endif //RAYCASTER_PLAYER_H
