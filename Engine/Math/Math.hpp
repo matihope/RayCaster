@@ -90,8 +90,8 @@ bool doLinesIntersect(Vector2f lineAStart, Vector2f lineAEnd, Vector2f LineBStar
 Vector2f findLineIntersection(Vector2f lineAStart, Vector2f lineAEnd, Vector2f LineBStart, Vector2f LineBEnd);
 
 template<typename T>
-bool isZero(T value) {
-	return abs(value) <= EPS_ZERO;
+bool isZero(T value, T EPSILON = EPS_ZERO) {
+	return std::abs(value) <= EPSILON;
 }
 
 }

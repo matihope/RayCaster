@@ -27,14 +27,14 @@ Math::Vector2f rc::RayGame::getPlayerPosition() const {
 void rc::RayGame::movePlayer(Math::Vector2f delta) {
 	auto playerPos = player.getPosition();
 
-	auto diff = Math::Vector2f((playerRadius + 0.01) * Math::sign(delta.x), 0);
+	auto diff = Math::Vector2f(static_cast<float>((playerRadius + 0.01) * Math::sign(delta.x), 0));
 	if (checkCollision(playerPos + diff)) {
 		delta.x = 0.0;
 		while (!checkCollision(playerPos + diff))
 			playerPos += diff;
 	}
 
-	diff = Math::Vector2f(0.f, (playerRadius + 0.01) * Math::sign(delta.y));
+	diff = Math::Vector2f(0.f, static_cast<float>((playerRadius + 0.01) * Math::sign(delta.y)));
 	if (checkCollision(playerPos + diff)) {
 		delta.y = 0.0;
 		while (!checkCollision(playerPos + diff))
@@ -51,7 +51,9 @@ float rc::RayGame::getPlayerRotation() const {
 }
 void rc::RayGame::setLevelTileSize(Math::Vector2f size) {
 	level.setTileSize(size);
-	player.setPosition(Math::Vector2f(size.x * playerStartPos.x, size.y * playerStartPos.y) + size / 2.f);
+	player.setPosition(
+		Math::Vector2f(size.x * static_cast<float>(playerStartPos.x), size.y * static_cast<float>(playerStartPos.y))
+			+ size / 2.f);
 }
 Math::Vector2f rc::RayGame::castRayFromPlayer(float directionRadians) const {
 	return castRayFrom(player.getPosition(), directionRadians);
@@ -66,14 +68,13 @@ void rc::RayGame::setPlayerRadius(float radius) {
 	playerRadius = radius;
 }
 bool rc::RayGame::checkCollision(Math::Vector2f position) const {
-	auto newCoordsX = Math::Vector2i(position.x / level.getTileSize().x, position.y / level.getTileSize().y);
+	auto newCoordsX = Math::Vector2i(static_cast<int>(position.x / level.getTileSize().x),
+	                                 static_cast<int>(position.y / level.getTileSize().y));
 	return level.getLevelData()[newCoordsX.y][newCoordsX.x] == 1;
 }
 std::vector<std::pair<Math::Vector2f, float>> rc::RayGame::castRaysFromPlayer(float fovRadians,
                                                                               unsigned int numRays) const {
 	std::vector<std::pair<Math::Vector2f, float>> hits;
-
-	float direction = getPlayerRotation() - fovRadians / 2.f;
 
 	std::vector<float> diffs;
 	float angle = fovRadians / 2.f;
@@ -84,9 +85,10 @@ std::vector<std::pair<Math::Vector2f, float>> rc::RayGame::castRaysFromPlayer(fl
 		angle -= diffs.back();
 	}
 
+	float direction = getPlayerRotation() - fovRadians / 2.f;
 	for (int i = 0; i < numRays; i++) {
 		hits.emplace_back(castRayFromPlayer(direction), direction);
 		direction += diffs[i];
 	}
-	return hits;
+	return std::move(hits);
 }

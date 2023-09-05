@@ -18,11 +18,9 @@ class Level2D : public WorldEntity {
 	Level2D();
 	void addRayGame(rc::RayGame *game);
 	void onPhysicsUpdate(float dt) override;
-
 	void setViewArea(const std::vector<std::pair<Math::Vector2f, float>> &hits);
-
-	void onDraw(sf::RenderTarget &target, sf::RenderStates states) const override;
 	void setPlayerRadius(float radius);
+
  private:
 
 	rc::RayGame *rc_game;

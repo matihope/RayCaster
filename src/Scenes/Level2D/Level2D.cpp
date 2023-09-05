@@ -27,40 +27,34 @@ void Level2D::addRayGame(rc::RayGame *game) {
 	auto [level_width, level_height] = game->getLevelSize();
 	sprites_preview->makeGrid({level_width, level_height},
 	                          sf::Vector2f(view_width / level_width, view_height / level_height));
-	sprites_preview->setTexture(&ResourceManager::get().getTexture("resources/colors.png"));
+	sprites_preview->setTexture(&ResourceManager::get().getTexture("resources/Castle_Wall.png"));
 
-	for (int y = 0; y < level_height; y++) {
-		for (int x = 0; x < level_width; x++) {
-			QuickSprite sprite = sprites_preview->getSprite(y * level_width + x);
-			auto [texture_width, texture_height] = sprites_preview->getTexture()->getSize();
-			if (rc_game->getLevelData()[y][x] == 1) {
-				sprite.setTexPosition(sf::Vector2f(texture_width / 5.f, 0));
-				sprite.setTexSize({texture_width / 5.f, (float) texture_height});
-			} else {
-				sprite.setTexSize({0, 0});
-			}
-		}
-	}
-
-	rc_game->setLevelTileSize(Math::Vector2f(view_width / rc_game->getLevelSize().x,
-	                                         view_height / rc_game->getLevelSize().y));
+	rc_game->setLevelTileSize({64.f, 64.f});
 }
 
 void Level2D::_updateSpritePreview() {
 	auto [level_width, level_height] = rc_game->getLevelSize();
+	auto [tex_x, tex_y] = sprites_preview->getTexture()->getSize();
 	for (int y = 0; y < level_height; y++) {
 		for (int x = 0; x < level_width; x++) {
 			QuickSprite sprite = sprites_preview->getSprite(y * level_width + x);
-			auto [tex_x, tex_y] = sprites_preview->getTexture()->getSize();
 			if (rc_game->getLevelData()[y][x] == 1) {
-				sprite.setTexPosition(sf::Vector2f(tex_x / 5.f, 0));
-				sprite.setTexSize({tex_x / 5.f, (float) tex_y});
+				sprite.setTexSize(sf::Vector2f(tex_x, tex_y));
 			} else {
 				sprite.setTexSize({0, 0});
 			}
 		}
 	}
 }
+Math::Vector2f scalePosition(const Math::Vector2f &position, rc::RayGame *rc_game) {
+	auto [view_width, view_height] = Game::get().getViewportSize();
+	view_width /= 2;
+	auto [level_width, level_height] = rc_game->getLevelSize();
+	auto [tile_width, tile_height] = rc_game->getLevelTileSize();
+	return Math::Vector2f(position.x / tile_width * view_width / level_width,
+	                      position.y / tile_height * view_height / level_height);
+}
+
 void Level2D::_updatePlayerPosition(float dt) {
 	float
 		deltaRotation = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
@@ -77,17 +71,20 @@ void Level2D::_updatePlayerPosition(float dt) {
 
 	rc_game->movePlayer(delta);
 
-	auto [player_x, player_y] = rc_game->getPlayerPosition();
+	auto [player_x, player_y] = scalePosition(rc_game->getPlayerPosition(), rc_game);
 	playerRay->setPosition(player_x, player_y);
 	player->setPosition(player_x, player_y);
 }
 
 void Level2D::setViewArea(const std::vector<std::pair<Math::Vector2f, float>> &hits) {
-	viewArea->setViewArea(hits, player->getPosition());
-}
-void Level2D::onDraw(sf::RenderTarget &target, sf::RenderStates states) const {
+	std::vector<std::pair<Math::Vector2f, float>> scaledHits;
 
+	for (const auto &hit : hits)
+		scaledHits.emplace_back(scalePosition(hit.first, rc_game), hit.second);
+
+	viewArea->setViewArea(scaledHits, player->getPosition());
 }
+
 void Level2D::setPlayerRadius(float radius) {
 	player->setRadius(radius);
 }

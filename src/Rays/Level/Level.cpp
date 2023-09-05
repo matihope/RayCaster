@@ -60,8 +60,8 @@ bool Level::readLevelFromFile(const std::string &path) {
 	if (!fileData.load(path))
 		return false;
 
-	setSize(fileData.data["data"].size(), fileData.data["data"][0].get<std::string>().size());
-	for (unsigned int y = 0; y < fileData.data["data"].size(); y++) {
+	setSize(fileData.data["data"][0].get<std::string>().size(), fileData.data["data"].size());
+	for (unsigned int y = 0; y < levelData.size(); y++) {
 		const std::string &row = fileData.data["data"][y].get<std::string>();
 		for (unsigned int x = 0; x < row.size(); x++)
 			setBlock({x, y}, row[x] - '0');
