@@ -12,7 +12,7 @@
 class Level3D : public WorldEntity {
  public:
 	void addRayGame(rc::RayGame *game);
-	void setBars(std::vector<Math::Vector2f> lengths, float fov);
+	void setBars(const std::vector<std::pair<Math::Vector2f, float>> &lengths, float fov);
 	Level3D();
  private:
 	rc::RayGame *rc_game;

@@ -11,6 +11,7 @@
 #include "Nodes/RectShape.hpp"
 #include "Nodes/CircleShape.hpp"
 #include "Nodes/RayShape.hpp"
+#include "ViewArea.hpp"
 
 class Level2D : public WorldEntity {
  public:
@@ -18,7 +19,7 @@ class Level2D : public WorldEntity {
 	void addRayGame(rc::RayGame *game);
 	void onPhysicsUpdate(float dt) override;
 
-	void setViewArea(std::vector<Math::Vector2f> vector_1);
+	void setViewArea(const std::vector<std::pair<Math::Vector2f, float>> &hits);
 
 	void onDraw(sf::RenderTarget &target, sf::RenderStates states) const override;
 	void setPlayerRadius(float radius);
@@ -29,9 +30,7 @@ class Level2D : public WorldEntity {
 	RectShape *background;
 	CircleShape *player;
 	RayShape *playerRay;
-
-	sf::VertexArray viewArea;
-	const sf::Texture *viewTexture;
+	ViewArea *viewArea;
 
 	void _updateSpritePreview();
 	void _updatePlayerPosition(float dt);

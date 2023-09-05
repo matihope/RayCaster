@@ -21,18 +21,17 @@ World::World() {
 	level3D->addRayGame(&rc_game);
 
 }
-void World::onUpdate(float dt) {
-	std::vector<Math::Vector2f> hits;
-	float fov = Math::degreesToRadians(90.f);
-	float direction = rc_game.getPlayerRotation() - Math::degreesToRadians(180.f) - fov / 2.f;
 
-	int width = 600;
-	for (int i = 0; i < width; i++) {
-		hits.push_back(rc_game.castRayFromPlayer(direction));
-		direction += fov / width;
-	}
+void World::onUpdate(float dt) {
+
+	// point of collision, direction at which the ray was sent
+	std::vector<std::pair<Math::Vector2f, float>> hits;
+
+	fov += dt * (sf::Keyboard::isKeyPressed(sf::Keyboard::I) - sf::Keyboard::isKeyPressed(sf::Keyboard::K));
+//	std::cout << "Fov: " << fov << std::endl;
+
+	hits = rc_game.castRaysFromPlayer(fov, 600);
 
 	level3D->setBars(hits, fov);
-
 	level_preview->setViewArea(hits);
 }

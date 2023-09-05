@@ -47,7 +47,7 @@ void rc::RayGame::rotatePlayer(float deltaRadians) {
 	player.rotate(deltaRadians);
 }
 float rc::RayGame::getPlayerRotation() const {
-	return player.getDirectionRadians();
+	return player.getDirectionRadians() - Math::degreesToRadians(180.f);
 }
 void rc::RayGame::setLevelTileSize(Math::Vector2f size) {
 	level.setTileSize(size);
@@ -68,4 +68,25 @@ void rc::RayGame::setPlayerRadius(float radius) {
 bool rc::RayGame::checkCollision(Math::Vector2f position) const {
 	auto newCoordsX = Math::Vector2i(position.x / level.getTileSize().x, position.y / level.getTileSize().y);
 	return level.getLevelData()[newCoordsX.y][newCoordsX.x] == 1;
+}
+std::vector<std::pair<Math::Vector2f, float>> rc::RayGame::castRaysFromPlayer(float fovRadians,
+                                                                              unsigned int numRays) const {
+	std::vector<std::pair<Math::Vector2f, float>> hits;
+
+	float direction = getPlayerRotation() - fovRadians / 2.f;
+
+	std::vector<float> diffs;
+	float angle = fovRadians / 2.f;
+	for (int i = 0; i < numRays; i++) {
+		float fraction =
+			(static_cast<float>(numRays) / 2.f - (static_cast<float>(i) + 1.f)) / (static_cast<float>(numRays) / 2.f);
+		diffs.push_back(angle - std::atan(fraction * std::tan(fovRadians / 2.f)));
+		angle -= diffs.back();
+	}
+
+	for (int i = 0; i < numRays; i++) {
+		hits.emplace_back(castRayFromPlayer(direction), direction);
+		direction += diffs[i];
+	}
+	return hits;
 }

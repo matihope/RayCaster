@@ -40,9 +40,9 @@ void WorldEntity::draw(sf::RenderTarget &target, sf::RenderStates states) const 
 	copied_states.transform *= getTransform();
 	onDraw(target, states);
 
-	for (const auto &layer : m_entity_pool) {
-		for (auto &entity : layer.second) target.draw(*entity, copied_states);
-	}
+	for (const auto &layer : m_entity_pool)
+		for (auto &entity : layer.second)
+			target.draw(*entity, copied_states);
 }
 
 void WorldEntity::addChild(std::unique_ptr<WorldEntity> child, unsigned int drawOrder) {

@@ -29,6 +29,8 @@ class RayGame {
 
 	[[nodiscard]] Math::Vector2f castRayFromPlayer(float directionRadians) const;
 	[[nodiscard]] Math::Vector2f castRayFrom(Math::Vector2f position, float directionRadians) const;
+	[[nodiscard]] std::vector<std::pair<Math::Vector2f, float>> castRaysFromPlayer(float fovRadians,
+	                                                                               unsigned int numRays) const;
 
 	[[nodiscard]] bool checkCollision(Math::Vector2f position) const;
 

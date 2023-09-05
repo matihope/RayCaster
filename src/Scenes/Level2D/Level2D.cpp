@@ -8,13 +8,12 @@
 
 Level2D::Level2D() {
 	rc_game = nullptr;
-	background = addChild<RectShape>(sf::Color(50, 50, 50), sf::Vector2f(600, 600));
+	background = addChild<RectShape>(sf::Color(73, 88, 103), sf::Vector2f(600, 600));
 	sprites_preview = addChild<SpriteBatch>();
-	playerRay = addChild<RayShape>(sf::Color(210, 210, 250), 3.5f, 45.f, 12.f);
-	player = addChild<CircleShape>(sf::Color(70, 70, 170), 1.f);
+	viewArea = addChild<ViewArea>();
+	playerRay = addChild<RayShape>(sf::Color(87, 115, 173), 3.5f, 45.f, 12.f);
+	player = addChild<CircleShape>(sf::Color(254, 95, 85), 1.f);
 
-	viewArea.setPrimitiveType(sf::TriangleFan);
-	viewTexture = &ResourceManager::get().getTexture("resources/walls.png");
 }
 void Level2D::onPhysicsUpdate(float dt) {
 	_updateSpritePreview();
@@ -66,7 +65,7 @@ void Level2D::_updatePlayerPosition(float dt) {
 	float
 		deltaRotation = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
 	rc_game->rotatePlayer(deltaRotation * dt);
-	auto playerRotation = rc_game->getPlayerRotation();
+	auto playerRotation = rc_game->getPlayerRotation() - Math::degreesToRadians(180.f);
 	playerRay->setRotation(Math::radiansToDegrees(playerRotation));
 
 	auto delta_x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
@@ -83,16 +82,11 @@ void Level2D::_updatePlayerPosition(float dt) {
 	player->setPosition(player_x, player_y);
 }
 
-void Level2D::setViewArea(std::vector<Math::Vector2f> hits) {
-	viewArea.resize(hits.size() + 1);
-	for (int i = 0; i < hits.size(); i++)
-		viewArea[i].position = {hits[0].x, hits[1].y};
-	viewArea[hits.size()] = player->getPosition();
+void Level2D::setViewArea(const std::vector<std::pair<Math::Vector2f, float>> &hits) {
+	viewArea->setViewArea(hits, player->getPosition());
 }
 void Level2D::onDraw(sf::RenderTarget &target, sf::RenderStates states) const {
-	states.transform *= getTransform();
-	states.texture = viewTexture;
-	target.draw(viewArea, states);
+
 }
 void Level2D::setPlayerRadius(float radius) {
 	player->setRadius(radius);
