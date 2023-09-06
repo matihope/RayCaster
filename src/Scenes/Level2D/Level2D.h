@@ -12,11 +12,12 @@
 #include "Nodes/CircleShape.hpp"
 #include "Nodes/RayShape.hpp"
 #include "ViewArea.hpp"
+#include "WorldEntity/BoxyWorldEntity.hpp"
 
-class Level2D : public WorldEntity {
+class Level2D : public BoxyWorldEntity {
  public:
 	Level2D();
-	void addRayGame(rc::RayGame *game);
+	void addRayGame(rc::RayGame *game, Math::Vector2u maxSize);
 	void onPhysicsUpdate(float dt) override;
 	void setViewArea(const std::vector<std::pair<Math::Vector2f, float>> &hits);
 	void setPlayerRadius(float radius);

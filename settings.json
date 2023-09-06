@@ -3,7 +3,7 @@
     "width": 800,
     "height": 800,
     "title": "RayCaster!",
-    "vsync": true
+    "vsync": false
   },
   "viewport": {
     "width": 800,

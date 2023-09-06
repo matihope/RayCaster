@@ -20,16 +20,16 @@ void Level2D::onPhysicsUpdate(float dt) {
 	_updatePlayerPosition(dt);
 }
 
-void Level2D::addRayGame(rc::RayGame *game) {
+void Level2D::addRayGame(rc::RayGame *game, Math::Vector2u maxSize) {
 	rc_game = game;
-	auto [view_width, view_height] = Game::get().getViewportSize();
-	view_width /= 2;
+
+	setMaxRenderSize(maxSize);
+	setOrigin(maxSize.x, maxSize.y);
+
 	auto [level_width, level_height] = game->getLevelSize();
 	sprites_preview->makeGrid({level_width, level_height},
-	                          sf::Vector2f(view_width / level_width, view_height / level_height));
+	                          sf::Vector2f(maxSize.x / level_width, maxSize.y / level_height));
 	sprites_preview->setTexture(&ResourceManager::get().getTexture("resources/Castle_Wall.png"));
-
-	rc_game->setLevelTileSize({64.f, 64.f});
 }
 
 void Level2D::_updateSpritePreview() {
@@ -45,14 +45,6 @@ void Level2D::_updateSpritePreview() {
 			}
 		}
 	}
-}
-Math::Vector2f scalePosition(const Math::Vector2f &position, rc::RayGame *rc_game) {
-	auto [view_width, view_height] = Game::get().getViewportSize();
-	view_width /= 2;
-	auto [level_width, level_height] = rc_game->getLevelSize();
-	auto [tile_width, tile_height] = rc_game->getLevelTileSize();
-	return Math::Vector2f(position.x / tile_width * view_width / level_width,
-	                      position.y / tile_height * view_height / level_height);
 }
 
 void Level2D::_updatePlayerPosition(float dt) {
@@ -71,18 +63,13 @@ void Level2D::_updatePlayerPosition(float dt) {
 
 	rc_game->movePlayer(delta);
 
-	auto [player_x, player_y] = scalePosition(rc_game->getPlayerPosition(), rc_game);
+	auto [player_x, player_y] = rc_game->getPlayerPosition();
 	playerRay->setPosition(player_x, player_y);
 	player->setPosition(player_x, player_y);
 }
 
 void Level2D::setViewArea(const std::vector<std::pair<Math::Vector2f, float>> &hits) {
-	std::vector<std::pair<Math::Vector2f, float>> scaledHits;
-
-	for (const auto &hit : hits)
-		scaledHits.emplace_back(scalePosition(hit.first, rc_game), hit.second);
-
-	viewArea->setViewArea(scaledHits, player->getPosition());
+	viewArea->setViewArea(hits, player->getPosition());
 }
 
 void Level2D::setPlayerRadius(float radius) {

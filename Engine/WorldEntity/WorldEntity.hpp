@@ -22,6 +22,8 @@ class WorldEntity : public sf::Drawable, public sf::Transformable, public Updata
 	void cleanEntities();
 
  public:
+	friend class BoxyWorldEntity;
+
 	WorldEntity();
 	~WorldEntity() override = default;
 
@@ -48,6 +50,7 @@ class WorldEntity : public sf::Drawable, public sf::Transformable, public Updata
 
 	void update(float dt) override;
 	void physicsUpdate(float dt) override;
+	void renderOnto(sf::RenderTarget &target, sf::RenderStates states) const;
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 	virtual void onUpdate(float dt) {};

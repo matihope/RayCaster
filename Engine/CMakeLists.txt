@@ -20,6 +20,8 @@ set(ENGINE_SOURCES
         Nodes/CircleShape.hpp
         Nodes/RayShape.cpp
         Nodes/RayShape.hpp
+        WorldEntity/BoxyWorldEntity.cpp
+        WorldEntity/BoxyWorldEntity.hpp
 )
 
 add_library(Engine ${ENGINE_SOURCES})

@@ -36,6 +36,10 @@ void WorldEntity::physicsUpdate(const float dt) {
 
 void WorldEntity::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 	if (not m_show) return;
+	renderOnto(target, states);
+}
+
+void WorldEntity::renderOnto(sf::RenderTarget &target, sf::RenderStates states) const {
 	sf::RenderStates copied_states(states);
 	copied_states.transform *= getTransform();
 	onDraw(target, states);
