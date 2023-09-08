@@ -24,22 +24,21 @@ void RayShape::setSize(float width, float length, float wingLength) {
 	this->length = length;
 	this->wingLength = wingLength;
 
-	body.setSize({width, length});
-	body.setOrigin({width / 2, 0});
-	body.setPosition({0, -length});
+	body.setSize({length, width});
+	body.setOrigin({0, width / 2.f});
 
-	leftWing.setOrigin({width / 2, 0});
-	leftWing.setSize({width, wingLength});
-	leftWing.setPosition({0, -length});
-	leftWing.setRotation(-35.f);
+	leftWing.setOrigin({wingLength, width / 2});
+	leftWing.setSize({wingLength, width});
+	leftWing.setPosition({length, 0});
+	leftWing.setRotation(35.f);
 
-	rightWing.setOrigin({width / 2, 0});
-	rightWing.setSize({width, wingLength});
-	rightWing.setPosition({0, -length});
-	rightWing.setRotation(35.f);
+	rightWing.setOrigin({wingLength, width / 2});
+	rightWing.setSize({wingLength, width});
+	rightWing.setPosition({length, 0});
+	rightWing.setRotation(-35.f);
 
 	arrowFill.setOrigin(width / 2, width / 2);
-	arrowFill.setPosition({0, -length});
+	arrowFill.setPosition({length, 0});
 	arrowFill.setRadius(width / 2);
 }
 void RayShape::setColor(sf::Color color) {

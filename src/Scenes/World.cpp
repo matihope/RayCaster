@@ -21,6 +21,9 @@ World::World() {
 
 	level3D = addChild<Level3D>();
 	level3D->addRayGame(&rc_game, {1200.f, 600.f});
+	level3D->setScale(Game::get().getViewportSize().x / level3D->getEntitySize().x,
+	                  Game::get().getViewportSize().y / level3D->getEntitySize().y);
+
 }
 
 void World::onUpdate(float dt) {
@@ -31,7 +34,7 @@ void World::onUpdate(float dt) {
 	fov += dt * (sf::Keyboard::isKeyPressed(sf::Keyboard::I) - sf::Keyboard::isKeyPressed(sf::Keyboard::K));
 //	std::cout << "Fov: " << fov << std::endl;
 
-	hits = rc_game.castRaysFromPlayer(fov, 1200);
+	hits = rc_game.castRaysFromPlayer(fov, (int) level3D->getEntitySize().x);
 
 	level3D->setBars(hits, fov);
 	level_preview->setViewArea(hits);

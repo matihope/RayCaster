@@ -3,7 +3,6 @@
 //
 
 #include <string>
-#include <iostream>
 #include <set>
 #include "Level.h"
 #include "JsonBridge/JsonBridge.hpp"
@@ -33,7 +32,7 @@ void Level::setTileSize(float width, float height) {
 	for (int y = 0; y < levelData.size(); y++) {
 		for (int x = 0; x < levelData[0].size(); x++) {
 			if (levelData[y][x] != 0) {
-				auto c1 = Math::Vector2f(x * width, y * height);
+				auto c1 = Math::Vector2f((float) x * width, (float) y * height);
 				auto c2 = c1 + Math::Vector2f(width, 0);
 				auto c3 = c2 + Math::Vector2f(0, height);
 				auto c4 = c1 + Math::Vector2f(0, height);
@@ -70,32 +69,63 @@ bool Level::readLevelFromFile(const std::string &path) {
 	return true;
 }
 
-Math::Vector2u Level::getSize() {
+Math::Vector2u Level::getSize() const {
 	return mapSize;
 }
+
 const std::vector<std::vector<int>> &Level::getLevelData() const {
 	return levelData;
 }
 
-auto intersectionComparator = [](const std::pair<Math::Vector2f, float> &a, const std::pair<Math::Vector2f, float> &b) {
-	return a.second < b.second;
-};
+Math::Vector2f moveXDistanceInDirection(Math::Vector2f position, float distanceOnXAxis, float direction) {
+	return position + Math::Vector2f(distanceOnXAxis, distanceOnXAxis * std::tan(direction));
+}
 
-Math::Vector2<float> Level::castRayFrom(Math::Vector2f position, float angleRadians) const {
-	auto maxLength = std::max(tileSize.x * levelData[0].size(), tileSize.y * levelData.size());
-	Math::Vector2f infiniteRay = {0, maxLength};
-	infiniteRay = Math::rotateVector(infiniteRay, angleRadians);
-	infiniteRay += position;
+Math::Vector2f moveYDistanceInDirection(Math::Vector2f position, float distanceOnYAxis, float direction) {
+	if (std::tan(direction) < 0)
+		distanceOnYAxis *= -1;
+	return position + Math::Vector2f(distanceOnYAxis / std::tan(direction), distanceOnYAxis);
+}
 
-	std::set<std::pair<Math::Vector2f, float>, decltype(intersectionComparator)> intersections;
-	for (const auto &wall : levelWalls) {
-		if (Math::doLinesIntersect(wall.start, wall.end, position, infiniteRay)) {
-			auto intersection = Math::findLineIntersection(wall.start, wall.end, position, infiniteRay);
-			intersections.insert({intersection, (intersection - position).length()});
+Math::Vector2f Level::castRayFrom(Math::Vector2f position, float angleRadians) const {
+	// Ray Casting implemented using the DDA algorithm.
+
+	position /= getTileSize();
+
+	Math::Vector2f dirVec = Math::rotateVector(Math::Vector2f(1.f, 0), angleRadians);
+	Math::Vector2i intPos((int) position.x, (int) position.y);
+	Math::Vector2f step = {dirVec.y / dirVec.x, dirVec.x / dirVec.y};
+	Math::Vector2f stepLength = {std::sqrt(step.x * step.x + 1), std::sqrt(step.y * step.y + 1)};
+	Math::Vector2f rayProgress = {0, 0};
+
+	rayProgress.x = dirVec.x > 0 ? (float) (intPos.x + 1) - position.x : position.x - (float) (intPos.x);
+	rayProgress.y = dirVec.y > 0 ? (float) (intPos.y + 1) - position.y : position.y - (float) (intPos.y);
+	rayProgress *= stepLength;
+
+	float maxDistance = std::max(getSize().x, getSize().y) * 1.42f;
+	float distance = 0;
+	bool foundCollision = false;
+	while (!foundCollision && distance < maxDistance) {
+		if (rayProgress.x < rayProgress.y) {
+			intPos.x += Math::sign(dirVec.x);
+			distance = rayProgress.x;
+			rayProgress.x += stepLength.x;
+		} else {
+			intPos.y += Math::sign(dirVec.y);
+			distance = rayProgress.y;
+			rayProgress.y += stepLength.y;
+		}
+		if (0 <= intPos.x && intPos.x < getSize().x && 0 <= intPos.y && intPos.y < getSize().y) {
+			if (levelData[intPos.y][intPos.x] == 1) {
+				foundCollision = true;
+			}
 		}
 	}
-	return intersections.begin()->first;
+
+	if (foundCollision) return (position + dirVec * distance) * getTileSize();
+	return {0.f, 0.f};
 }
+
 Math::Vector2f Level::getTileSize() const {
 	return tileSize;
 }

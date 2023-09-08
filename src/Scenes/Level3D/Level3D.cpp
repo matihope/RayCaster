@@ -55,5 +55,8 @@ void Level3D::setBars(const std::vector<std::pair<Math::Vector2f, float>> &lengt
 			std::cout << Math::isZero(std::fmod(lengths[i].first.x, tileWidth), 1e-2f) << std::endl;
 		}
 	}
+}
 
+Math::Vector2f Level3D::getEntitySize() const {
+	return entitySize;
 }

@@ -14,6 +14,7 @@ class Level3D : public BoxyWorldEntity {
  public:
 	void addRayGame(rc::RayGame *game, Math::Vector2f size);
 	void setBars(const std::vector<std::pair<Math::Vector2f, float>> &lengths, float fov);
+	Math::Vector2f getEntitySize() const;
 	Level3D();
  private:
 	rc::RayGame *rc_game;

@@ -43,35 +43,44 @@ void rc::RayGame::movePlayer(Math::Vector2f delta) {
 
 	player.move(delta);
 }
+
 void rc::RayGame::rotatePlayer(float deltaRadians) {
 	player.rotate(deltaRadians);
 }
+
 float rc::RayGame::getPlayerRotation() const {
-	return player.getDirectionRadians() - Math::degreesToRadians(180.f);
+	return player.getDirectionRadians();
 }
+
 void rc::RayGame::setLevelTileSize(Math::Vector2f size) {
 	level.setTileSize(size);
 	player.setPosition(
 		Math::Vector2f(size.x * static_cast<float>(playerStartPos.x), size.y * static_cast<float>(playerStartPos.y))
 			+ size / 2.f);
 }
+
 Math::Vector2f rc::RayGame::castRayFromPlayer(float directionRadians) const {
 	return castRayFrom(player.getPosition(), directionRadians);
 }
+
 Math::Vector2f rc::RayGame::castRayFrom(Math::Vector2f position, float directionRadians) const {
 	return level.castRayFrom(position, directionRadians);
 }
+
 Math::Vector2f rc::RayGame::getLevelTileSize() const {
 	return level.getTileSize();
 }
+
 void rc::RayGame::setPlayerRadius(float radius) {
 	playerRadius = radius;
 }
+
 bool rc::RayGame::checkCollision(Math::Vector2f position) const {
 	auto newCoordsX = Math::Vector2i(static_cast<int>(position.x / level.getTileSize().x),
 	                                 static_cast<int>(position.y / level.getTileSize().y));
 	return level.getLevelData()[newCoordsX.y][newCoordsX.x] == 1;
 }
+
 std::vector<std::pair<Math::Vector2f, float>> rc::RayGame::castRaysFromPlayer(float fovRadians,
                                                                               unsigned int numRays) const {
 	std::vector<std::pair<Math::Vector2f, float>> hits;
@@ -79,8 +88,7 @@ std::vector<std::pair<Math::Vector2f, float>> rc::RayGame::castRaysFromPlayer(fl
 	std::vector<float> diffs;
 	float angle = fovRadians / 2.f;
 	for (int i = 0; i < numRays; i++) {
-		float fraction =
-			(static_cast<float>(numRays) / 2.f - (static_cast<float>(i) + 1.f)) / (static_cast<float>(numRays) / 2.f);
+		float fraction = ((float) numRays / 2.f - (float) i + 1.f) / ((float) numRays / 2.f);
 		diffs.push_back(angle - std::atan(fraction * std::tan(fovRadians / 2.f)));
 		angle -= diffs.back();
 	}

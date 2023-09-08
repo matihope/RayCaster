@@ -30,6 +30,18 @@ class Vector2 {
 		return *this;
 	}
 
+	Vector2<T> &operator*=(const Vector2<T> &rhs) {
+		x *= rhs.x;
+		y *= rhs.y;
+		return *this;
+	}
+
+	Vector2<T> &operator/=(const Vector2<T> &rhs) {
+		x /= rhs.x;
+		y /= rhs.y;
+		return *this;
+	}
+
 	template<class X>
 	Vector2<T> &operator*=(const X &rhs) {
 		x *= rhs;
@@ -50,6 +62,14 @@ class Vector2 {
 
 	Vector2<T> operator-(const Vector2<T> &rhs) const {
 		return {x - rhs.x, y - rhs.y};
+	}
+
+	Vector2<T> operator*(const Vector2<T> &rhs) const {
+		return {x * rhs.x, y * rhs.y};
+	}
+
+	Vector2<T> operator/(const Vector2<T> &rhs) const {
+		return {x / rhs.x, y / rhs.y};
 	}
 
 	template<class X>

@@ -51,11 +51,11 @@ void Level2D::_updatePlayerPosition(float dt) {
 	float
 		deltaRotation = sf::Keyboard::isKeyPressed(sf::Keyboard::Right) - sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
 	rc_game->rotatePlayer(deltaRotation * dt);
-	auto playerRotation = rc_game->getPlayerRotation() - Math::degreesToRadians(180.f);
+	auto playerRotation = rc_game->getPlayerRotation();
 	playerRay->setRotation(Math::radiansToDegrees(playerRotation));
 
-	auto delta_x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-	auto delta_y = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+	auto delta_x = sf::Keyboard::isKeyPressed(sf::Keyboard::W) - sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+	auto delta_y = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 	auto delta = Math::Vector2f(delta_x, delta_y);
 	delta = Math::normalizeVector(delta);
 	delta = Math::rotateVector(delta, playerRotation);
