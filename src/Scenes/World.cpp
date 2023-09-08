@@ -13,6 +13,7 @@ World::World() {
 	rc_game.loadLevelFromFile("world.json");
 	rc_game.setLevelTileSize({64.f, 64.f});
 	rc_game.setPlayerRadius(10.f);
+	rc_game.rotatePlayer(M_PI / 2.f);
 
 	level_preview->setPlayerRadius(10.f);
 	level_preview->addRayGame(&rc_game, {64 * rc_game.getLevelSize().x, 64 * rc_game.getLevelSize().y});
