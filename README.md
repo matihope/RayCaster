@@ -28,7 +28,8 @@ bash -c "git clone https://github.com/matihope/RayCaster.git && \
     cd RayCaster && \
     cmake -B build && \
     cd build && \
-    make && \
+    make -j 3 && \
+    cd .. && \
     ./RayCaster"
 ```
 
