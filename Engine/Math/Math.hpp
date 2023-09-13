@@ -11,80 +11,90 @@ namespace Math {
 
 template<typename T>
 int sign(T val) {
-	return (0 < val) - (val < 0);
+  return (0 < val) - (val < 0);
 }
 template<typename T>
 class Vector2 {
  public:
-	T x = 0, y = 0;
+  T x = 0, y = 0;
 
-	Vector2<T> &operator+=(const Vector2<T> &rhs) {
-		x += rhs.x;
-		y += rhs.y;
-		return *this;
-	}
+  Vector2<T> &operator+=(const Vector2<T> &rhs) {
+    x += rhs.x;
+    y += rhs.y;
+    return *this;
+  }
 
-	Vector2<T> &operator-=(const Vector2<T> &rhs) {
-		x -= rhs.x;
-		y -= rhs.y;
-		return *this;
-	}
+  Vector2<T> &operator-=(const Vector2<T> &rhs) {
+    x -= rhs.x;
+    y -= rhs.y;
+    return *this;
+  }
 
-	Vector2<T> &operator*=(const Vector2<T> &rhs) {
-		x *= rhs.x;
-		y *= rhs.y;
-		return *this;
-	}
+  Vector2<T> &operator*=(const Vector2<T> &rhs) {
+    x *= rhs.x;
+    y *= rhs.y;
+    return *this;
+  }
 
-	Vector2<T> &operator/=(const Vector2<T> &rhs) {
-		x /= rhs.x;
-		y /= rhs.y;
-		return *this;
-	}
+  Vector2<T> &operator/=(const Vector2<T> &rhs) {
+    x /= rhs.x;
+    y /= rhs.y;
+    return *this;
+  }
 
-	template<class X>
-	Vector2<T> &operator*=(const X &rhs) {
-		x *= rhs;
-		y *= rhs;
-		return *this;
-	}
+  template<class X>
+  Vector2<T> &operator*=(const X &rhs) {
+    x *= rhs;
+    y *= rhs;
+    return *this;
+  }
 
-	template<class X>
-	Vector2<T> &operator/=(const X &rhs) {
-		x *= rhs;
-		y *= rhs;
-		return *this;
-	}
+  template<class X>
+  Vector2<T> &operator/=(const X &rhs) {
+    x *= rhs;
+    y *= rhs;
+    return *this;
+  }
 
-	Vector2<T> operator+(const Vector2<T> &rhs) const {
-		return {x + rhs.x, y + rhs.y};
-	}
+  Vector2<T> operator+(const Vector2<T> &rhs) const {
+    return {x + rhs.x, y + rhs.y};
+  }
 
-	Vector2<T> operator-(const Vector2<T> &rhs) const {
-		return {x - rhs.x, y - rhs.y};
-	}
+  Vector2<T> operator-(const Vector2<T> &rhs) const {
+    return {x - rhs.x, y - rhs.y};
+  }
 
-	Vector2<T> operator*(const Vector2<T> &rhs) const {
-		return {x * rhs.x, y * rhs.y};
-	}
+  Vector2<T> operator*(const Vector2<T> &rhs) const {
+    return {x * rhs.x, y * rhs.y};
+  }
 
-	Vector2<T> operator/(const Vector2<T> &rhs) const {
-		return {x / rhs.x, y / rhs.y};
-	}
+  Vector2<T> operator/(const Vector2<T> &rhs) const {
+    return {x / rhs.x, y / rhs.y};
+  }
 
-	template<class X>
-	Vector2<T> operator*(const X &rhs) const {
-		return {x * rhs, y * rhs};
-	}
+  template<class X>
+  Vector2<T> operator*(const X &rhs) const {
+    return {x * rhs, y * rhs};
+  }
 
-	template<class X>
-	Vector2<T> operator/(const X &rhs) const {
-		return {x / rhs, y / rhs};
-	}
+  template<class X>
+  Vector2<T> operator/(const X &rhs) const {
+    return {x / rhs, y / rhs};
+  }
 
-	T length() const {
-		return std::sqrt(x * x + y * y);
-	}
+  T length() const {
+    return std::sqrt(x * x + y * y);
+  }
+
+  template<class X>
+  Vector2<X> type() {
+    return {(X) x, (X) y};
+  }
+
+  template<class X>
+  X as() {
+    return X(x, y);
+  }
 
 };
 
@@ -111,7 +121,7 @@ Vector2f findLineIntersection(Vector2f lineAStart, Vector2f lineAEnd, Vector2f L
 
 template<typename T>
 bool isZero(T value, T EPSILON = EPS_ZERO) {
-	return std::abs(value) <= EPSILON;
+  return std::abs(value) <= EPSILON;
 }
 
 }

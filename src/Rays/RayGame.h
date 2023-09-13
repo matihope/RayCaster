@@ -13,7 +13,7 @@ namespace rc {
 class RayGame {
  public:
 	bool loadLevelFromFile(const std::string &levelPath);
-	Math::Vector2u getLevelSize();
+	[[nodiscard]] Math::Vector2u getLevelSize() const;
 	[[nodiscard]] const std::vector<std::vector<int>> &getLevelData() const;
 
 	void setPlayerRadius(float radius);
